@@ -5,8 +5,9 @@ namespace Furdarius\OIDConnect;
 use Carbon\Carbon;
 use Furdarius\OIDConnect\Contract\JSONGetter;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
-use Lcobucci\Jose\Parsing\Decoder;
+use Lcobucci\JWT\Decoder;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Key\InMemory as InMemoryKey;
 
 class KeysFetcher
 {
@@ -81,7 +82,7 @@ class KeysFetcher
 
         $data = $this->fetcher->get($this->jwksURI);
         foreach ($data['keys'] as $key) {
-            $result[$key['kid']] = new Key($this->createPemFromModulusAndExponent($key['n'], $key['e']));
+            $result[$key['kid']] = InMemoryKey::plainText($this->createPemFromModulusAndExponent($key['n'], $key['e']));
         }
 
         return $result;

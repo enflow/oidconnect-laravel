@@ -13,11 +13,11 @@ use Illuminate\Support\ServiceProvider as ServiceProviderIlluminate;
 use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 use Lcobucci\Clock\Clock;
 use Lcobucci\Clock\SystemClock;
-use Lcobucci\Jose\Parsing\Decoder;
-use Lcobucci\Jose\Parsing\Parser as JsonDecoder;
+use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Decoder;
 use Lcobucci\JWT\Validation\Validator as JWTValidator;
 use Lcobucci\JWT\Validator;
 
@@ -79,7 +79,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         });
 
         $this->app->singleton(Decoder::class, function ($app) {
-            return new JsonDecoder();
+            return new JoseEncoder();
         });
 
         $this->app->singleton(Parser::class, function ($app) {
@@ -91,7 +91,7 @@ class ServiceProvider extends ServiceProviderIlluminate
         });
 
         $this->app->singleton(Clock::class, function ($app) {
-            return new SystemClock();
+            return new SystemClock(new \DateTimeZone('UTC'));
         });
 
         $this->app->singleton(Signer::class, function ($app) {
