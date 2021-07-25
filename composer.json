@@ -11,7 +11,7 @@
     ],
     "require": {
         "laravel/socialite": "^5.2",
-        "lcobucci/jwt": "^3.4",
+        "lcobucci/jwt": "^4.1",
         "illuminate/database": "^8.40",
         "illuminate/routing": "^8.40"
     },
