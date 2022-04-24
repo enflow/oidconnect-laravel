@@ -1,5 +1,5 @@
 {
-    "name": "johndab/oidconnect-laravel",
+    "name": "enflow/oidconnect-laravel",
     "description": "Open ID Connect client library for Laravel Framework",
     "license": "MIT",
     "keywords": ["openidconnect", "oauth", "laravel"],
