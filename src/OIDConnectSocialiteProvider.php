@@ -79,6 +79,10 @@ class OIDConnectSocialiteProvider extends AbstractProvider implements ProviderIn
      */
     public function user()
     {
+        if ($this->user) {
+            return $this->user;
+        }
+
         if ($this->hasInvalidState()) {
             throw new InvalidStateException;
         }
@@ -89,13 +93,14 @@ class OIDConnectSocialiteProvider extends AbstractProvider implements ProviderIn
             throw new TokenRequestException($response['error']);
         }
 
-        $token = $response['id_token'];
+        $this->user = $this->mapUserToObject($this->getUserByToken(
+            $token = Arr::get($response, 'access_token')
+        ));
 
-        $user = $this->mapUserToObject($this->getUserByToken($token));
-
-        return $user->setToken($token)
+        return $this->user->setToken($token)
             ->setRefreshToken(Arr::get($response, 'refresh_token'))
-            ->setExpiresIn(Arr::get($response, 'expires_in'));
+            ->setExpiresIn(Arr::get($response, 'expires_in'))
+            ->setApprovedScopes(explode($this->scopeSeparator, Arr::get($response, 'scope', '')));
     }
 
     /**
@@ -147,6 +152,8 @@ class OIDConnectSocialiteProvider extends AbstractProvider implements ProviderIn
             'code' => $code,
             'redirect_uri' => $this->redirectUrl,
             'grant_type' => 'authorization_code',
+
+            'scope' => $this->formatScopes($this->getScopes(), $this->scopeSeparator),
         ];
     }
 

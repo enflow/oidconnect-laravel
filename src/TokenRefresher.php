@@ -7,7 +7,7 @@ use Furdarius\OIDConnect\Exception\TokenStorageException;
 
 class TokenRefresher
 {
-    protected $scopes = [
+    public $scopes = [
         'openid',
         'email',
         'profile',
